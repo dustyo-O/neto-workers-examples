@@ -1,0 +1,26 @@
+<html>
+<head>
+</head>
+<body>
+  <h1>Воркеры</h1>
+  <pre class="messages">
+  </pre>
+  <iframe class="iframe" src="http://localhost:8081/"></iframe>
+  <script>
+    const messages = document.querySelector('.messages');
+    const iframe = document.querySelector('.iframe').contentWindow;
+
+    window.addEventListener('message', (event) => {
+      console.log(event);
+
+      if (event.data === 'load') {
+        iframe.postMessage('hello', 'http://localhost:8081');
+      } else {
+        messages.innerText += event.data + '\n';
+
+        setTimeout(() => iframe.postMessage(Math.random(), 'http://localhost:8081'), 1000);
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<html>
+<head>
+</head>
+<body>
+  <h1>Воркеры</h1>
+  <input type="file" class="file-input">
+  <button class="console-button">Кнопка-консоль</button>
+  <script>
+    const worker = new Worker('./zip-worker.js');
+
+    const fileInput = document.querySelector('.file-input');
+    const consoleButton = document.querySelector('.console-button');
+
+    let file;
+
+    consoleButton.addEventListener('click', (event) => {
+      console.log('click', event);
+    });
+
+    fileInput.addEventListener('change', (event) => {
+      file = event.target.files && event.target.files[0];
+
+      worker.postMessage(file);
+    });
+
+    function createZipName(fileName) {
+      const baseName = fileName.includes('.') ?
+        fileName.slice(0, fileName.lastIndexOf('.')) : fileName;
+
+      return baseName + '.zip';
+    }
+
+    worker.addEventListener('message', (event) => {
+      if (!file) return;
+      const url = URL.createObjectURL(event.data);
+
+      const a = document.createElement('a');
+
+      a.href = url;
+      a.rel = 'noopener';
+      a.download = createZipName(file.name);
+
+      a.click();
+
+      URL.revokeObjectURL(url);
+    });
+  </script>
+</body>
+</html>

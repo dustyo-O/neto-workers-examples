@@ -1,0 +1,29 @@
+<html>
+<head>
+</head>
+<body>
+  <h1>Воркеры</h1>
+  <input type="file" class="file-input">
+  <button class="console-button">Кнопка-консоль</button>
+  <script>
+    const worker = new Worker('./file-worker.js');
+
+    const fileInput = document.querySelector('.file-input');
+    const consoleButton = document.querySelector('.console-button');
+
+    consoleButton.addEventListener('click', (event) => {
+      console.log('click', event);
+    });
+
+    fileInput.addEventListener('change', (event) => {
+      const file = event.target.files && event.target.files[0];
+
+      worker.postMessage(file);
+    });
+
+    worker.addEventListener('message', (event) => {
+      console.log(event.data);
+    })
+  </script>
+</body>
+</html>

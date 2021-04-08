@@ -1,0 +1,31 @@
+<html>
+<head>
+</head>
+<body>
+  <h1>Воркеры</h1>
+  <button class="slow-button">Кнопка-тормоз</button>
+  <button class="console-button">Кнопка-консоль</button>
+  <script>
+    const worker = new Worker('./first-worker.js');
+
+    const slowButton = document.querySelector('.slow-button');
+    const consoleButton = document.querySelector('.console-button');
+
+    consoleButton.addEventListener('click', (event) => {
+      console.log('click', event);
+    });
+
+    slowButton.addEventListener('click', (event) => {
+      // const result = await slow();
+
+      // console.log(result);
+
+      worker.postMessage('slow');
+    });
+
+    worker.addEventListener('message', (event) => {
+      console.log(event.data);
+    })
+  </script>
+</body>
+</html>
